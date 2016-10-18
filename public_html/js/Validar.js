@@ -11,13 +11,19 @@ function Validar() {
 function ValidarNomyApe(num) {
     var value = document.getElementsByTagName("input")[num].value;
     var correcto = false;
+    var salir = false;
     if (value.length > 0) {
         var expreg = /^([A-Z]|[a-z])/;
-        if(expreg.test(value)){
-            correcto=true;
-        }else{
-            alert("El nombre y los apellidos deben estar compuestos solo por letras");
+        for (var i = 0; i < value.length && !salir; i++) {
+            if (expreg.test(value[i])) {
+                correcto = true;
+            } else {
+                correcto = false;
+                salir = true;
+            }
         }
+        if (!correcto)
+            alert("El nombre y los apellidos deben estar compuestos solo por letras");
     } else {
         correcto = true;
     }
@@ -99,16 +105,29 @@ function ValidarNIF() {
 function Validar8PrimDig() {
     var nif = document.getElementsByTagName("input")[0].value;
     var nums = document.getElementsByTagName("input")[0].value.substring(0, 8);
-    nums = parseInt(nums);
     var letra = nif.substring(8, 9);
+    var salir = false;
     var resto = nums % 23;
     var correcto = false;
-    if (isNaN(nums)) {
+    var expreg2 = /(^[1-9]{8}$)/;    
+        if (expreg2.test(nums)){
+            correcto = true;
+        } else {
+            alert("nuuuuu");
+            correcto = false;
+        }
+    if (!correcto) {
         alert("Los 8 primeros caracteres del NIF deben ser números");
     } else {
+        var expreg = /^([A-Z]|[a-z])/;
+        if (expreg.test(letra)) {
+            correcto = true;
+        }
         var letrasValidas = ["t", "r", "w", "a", "g", "m", "y", "f", "p", "d", "x", "b", "n", "j", "z", "s", "q", "v", "h", "l", "c", "k", "e", "t"];
         if (letrasValidas[resto] === letra.toLowerCase()) {
             correcto = true;
+        } else {
+            correcto = false;
         }
         if (!correcto) {
             alert("La letra del NIF no es correcta");
@@ -118,17 +137,29 @@ function Validar8PrimDig() {
 }
 
 function ValidarNotEmpty() {
-    var correcto = false;
+    var emptys = false;
+    var radio = false;
+    var contadorChecks = 0;
     var form = document.forms[0];
-    for (var i = 1; i < form.length - 1 && !correcto; i++) {
-        if (form.elements[i].value.length === 0 || !form.elements[i].checked) {
+    for (var i = 1; i < form.length - 1 && !emptys; i++) {
+        if (form.elements[i].value.length === 0) {
             alert("No ha rellenado el campo " + form.elements[i].name);
-            correcto = true;
+            emptys = true;
+        }
+        if (form.elements[i].type === "radio" && form.elements[i].name === "Sexo" && !radio) {
+            if (form.elements[i].checked) {
+                radio = true;
+                contadorChecks++;
+            }
         }
     }
-    return !correcto;
+    var final = false;
+    if (contadorChecks !== 1 && !emptys)
+        alert("Debe escoger una opcion en el campo Sexo");
+    else if (!emptys)
+        final = true;
+    return final;
 }
-
 function ValidarNotEmptyNif() {
     var correcto = false;
     var nif = document.getElementsByTagName("input")[0].value;
@@ -155,13 +186,13 @@ function ValidarNoEspacios() {
 function Validar9Digitos() {
     var nums = document.getElementsByTagName("input")[0].value;
     var array = nums.split("");
-    var NueveDig = false;
+    var NueveDig = true;
     if (array.length !== 9)
-        NueveDig = true;
-    if (NueveDig) {
+        NueveDig = false;
+    if (!NueveDig) {
         alert("Debe introducir 9 dígitos");
     }
-    return !NueveDig;
+    return NueveDig;
 }
 
 
